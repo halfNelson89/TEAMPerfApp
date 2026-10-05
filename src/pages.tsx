@@ -3,7 +3,7 @@ import { productConfig } from "./config";
 import { demoData } from "./demoData";
 
 type Role = "parent" | "coach";
-type View = "home" | "portal" | "lesson";
+type View = "home" | "portal";
 type PortalPage = "overview" | "checkin" | "insights" | "learn" | "support";
 
 const heroImage =
@@ -16,11 +16,6 @@ const roleContent = {
     description:
       "Build the language, awareness, and confidence to support your athlete through pressure, setbacks, and growth.",
     accent: "#d9ff54",
-    modules: [
-      ["The Resilient Athlete", "4 lessons", "42 min", demoData.courseProgress.parent[0]],
-      ["Motivation Without Pressure", "5 lessons", "55 min", demoData.courseProgress.parent[1]],
-      ["Recognizing the Warning Signs", "4 lessons", "38 min", demoData.courseProgress.parent[2]],
-    ],
   },
   coach: {
     label: "Coach",
@@ -28,11 +23,6 @@ const roleContent = {
     description:
       "Learn practical frameworks for trust, sustainable motivation, emotional regulation, and high-performance culture.",
     accent: "#f0a4ff",
-    modules: [
-      ["Culture Is a Performance Tool", "4 lessons", "46 min", demoData.courseProgress.coach[0]],
-      ["Coaching Through Adversity", "6 lessons", "1 hr 5 min", demoData.courseProgress.coach[1]],
-      ["Burnout, Anxiety & Intervention", "5 lessons", "52 min", demoData.courseProgress.coach[2]],
-    ],
   },
 };
 
@@ -771,386 +761,24 @@ function WellbeingInsights({ startCheckIn }: { startCheckIn: () => void }) {
   );
 }
 
-function RapidGame({ role, exit }: { role: Role; exit: () => void }) {
-  const parentQuestions = [
-    ["“Let’s go, Maya!”", 0, "That is encouragement. Maya still gets to make the decisions."],
-    ["“Shoot! Shoot it now!”", 1, "That is an instruction. It splits attention between you and the game."],
-    ["“Great hustle!”", 0, "That reinforces effort without directing the next play."],
-    ["“Get your elbow up!”", 1, "That is technique. Leave the technical cue to the coach."],
-  ] as const;
-  const coachQuestions = [
-    ["“You rushed that shot.”", 0, "Specific behavior is observable and can be changed."],
-    ["“You’re lazy.”", 1, "That labels the person instead of identifying a behavior."],
-    ["“Keep your head up on the reset.”", 0, "This is a specific, actionable behavior cue."],
-    ["“You always choke.”", 1, "That turns one moment into a harmful identity statement."],
-  ] as const;
-  const questions = role === "parent" ? parentQuestions : coachQuestions;
-  const labels =
-    role === "parent" ? ["Cheering", "Coaching from the stands"] : ["About behavior", "About the person"];
-  const [index, setIndex] = useState(0);
-  const [selected, setSelected] = useState<number | null>(null);
-  const [score, setScore] = useState(0);
-  const [complete, setComplete] = useState(false);
-  const current = questions[index];
-
-  const choose = (answer: number) => {
-    if (selected !== null) return;
-    setSelected(answer);
-    if (answer === current[1]) setScore(score + 1);
-  };
-
-  const next = () => {
-    if (index === questions.length - 1) {
-      setComplete(true);
-    } else {
-      setIndex(index + 1);
-      setSelected(null);
-    }
-  };
-
-  if (complete) {
-    return (
-      <div className="mx-auto max-w-[760px] px-5 py-12 sm:px-9 lg:py-20">
-        <div className="rounded-[2rem] bg-white p-8 text-center shadow-[0_20px_70px_rgba(24,32,29,.08)] sm:p-12">
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#d9ff54]">
-            <Icon name="check" className="h-10 w-10" />
-          </div>
-          <p className="eyebrow mt-8">Game complete</p>
-          <h1 className="font-display mt-4 text-5xl">Strong work.</h1>
-          <p className="mt-4 text-sm leading-6 text-black/50">
-            You scored {score} of {questions.length}. More importantly, you practiced
-            separating encouragement from pressure in real time.
-          </p>
-          <div className="mx-auto mt-8 flex max-w-sm items-center justify-between rounded-2xl bg-[#f4f2eb] px-6 py-5">
-            <span className="text-sm font-bold">Points earned</span>
-            <span className="text-xl font-bold">+{score * 25} XP</span>
-          </div>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <button
-              onClick={() => {
-                setIndex(0);
-                setScore(0);
-                setSelected(null);
-                setComplete(false);
-              }}
-              className="rounded-full border border-black/15 px-6 py-3.5 text-sm font-bold"
-            >
-              Play again
-            </button>
-            <button
-              onClick={exit}
-              className="flex items-center justify-center gap-2 rounded-full bg-[#171b19] px-6 py-3.5 text-sm font-bold text-white"
-            >
-              Continue pathway <Icon name="arrow" className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+function LearnHub({ role }: { role: Role }) {
   return (
-    <div className="mx-auto max-w-[900px] px-5 py-8 sm:px-9 lg:py-14">
-      <div className="flex items-center gap-4">
-        <button onClick={exit} aria-label="Close game" className="text-black/45">
-          <Icon name="close" className="h-6 w-6" />
-        </button>
-        <div className="h-3 flex-1 overflow-hidden rounded-full bg-black/10">
-          <div
-            className="h-full rounded-full bg-[#d9ff54] transition-all duration-500"
-            style={{ width: `${((index + 1) / questions.length) * 100}%` }}
-          />
-        </div>
-        <span className="text-xs font-bold">{score * 25} XP</span>
-      </div>
-      <div className="mt-10 rounded-[2rem] bg-white p-7 shadow-[0_20px_70px_rgba(24,32,29,.06)] sm:p-11">
-        <div className="flex items-center justify-between">
-          <span className="rounded-full bg-[#efe7ff] px-3 py-2 text-[10px] font-bold tracking-wider uppercase">
-            Rapid game
-          </span>
-          <span className="text-xs font-bold text-black/35">{index + 1} of {questions.length}</span>
-        </div>
-        <p className="eyebrow mt-10 text-black/40">
-          {role === "parent" ? "Cheer or coach?" : "Behavior or person?"}
-        </p>
-        <h1 className="font-display mt-4 text-4xl leading-tight tracking-[-0.035em] sm:text-5xl">
-          {current[0]}
+    <div className="mx-auto max-w-[1328px] px-5 py-10 sm:px-9 lg:py-14">
+      <div>
+        <p className="eyebrow">{roleContent[role].label} learning pathway</p>
+        <h1 className="font-display mt-4 text-5xl tracking-[-0.04em] sm:text-6xl">
+          Build skill, one step at a time.
         </h1>
-        <p className="mt-3 text-sm text-black/45">Choose the best classification.</p>
-        <div className="mt-9 grid gap-3 sm:grid-cols-2">
-          {labels.map((label, answer) => {
-            const isCorrect = selected !== null && answer === current[1];
-            const isWrong = selected === answer && answer !== current[1];
-            return (
-              <button
-                key={label}
-                onClick={() => choose(answer)}
-                className={`min-h-24 rounded-2xl border-2 p-5 text-left text-sm font-bold transition ${
-                  isCorrect
-                    ? "border-[#7da325] bg-[#eff8d6]"
-                    : isWrong
-                      ? "border-[#bf745f] bg-[#fff0eb]"
-                      : "border-black/10 bg-[#f8f7f3] hover:border-black/30"
-                }`}
-              >
-                <span className="mr-3 inline-flex h-7 w-7 items-center justify-center rounded-lg bg-white text-xs">
-                  {answer + 1}
-                </span>
-                {label}
-              </button>
-            );
-          })}
-        </div>
-        {selected !== null && (
-          <div
-            className={`mt-6 rounded-2xl p-5 ${
-              selected === current[1] ? "bg-[#eff8d6]" : "bg-[#fff0eb]"
-            }`}
-          >
-            <p className="text-sm font-bold">
-              {selected === current[1] ? "Exactly right." : "Not quite—here’s the distinction."}
-            </p>
-            <p className="mt-2 text-sm leading-6 text-black/55">{current[2]}</p>
-            <button
-              onClick={next}
-              className="mt-5 flex items-center gap-2 rounded-full bg-[#171b19] px-5 py-3 text-xs font-bold text-white"
-            >
-              Continue <Icon name="arrow" className="h-4 w-4" />
-            </button>
-          </div>
-        )}
+        <p className="mt-4 max-w-xl text-sm leading-6 text-black/50">
+          Complete short lessons, practice through games, then use each skill in real life.
+        </p>
       </div>
-    </div>
-  );
-}
-
-function LearnHub({
-  role,
-  startLesson,
-}: {
-  role: Role;
-  startLesson: () => void;
-}) {
-  const [gameOpen, setGameOpen] = useState(false);
-  if (gameOpen) return <RapidGame role={role} exit={() => setGameOpen(false)} />;
-
-  const isParent = role === "parent";
-  const path = [
-    {
-      type: "Check",
-      title: "Where you start",
-      detail: "Three questions · 2 min",
-      state: "done",
-      icon: "check" as const,
-    },
-    {
-      type: "Lesson",
-      title: isParent ? "Your job on game day" : "What athletes carry home",
-      detail: "Core idea · 8 min",
-      state: "done",
-      icon: "book" as const,
-    },
-    {
-      type: "Lesson + game",
-      title: isParent ? "Cheer or Coach?" : "Behavior or Person?",
-      detail: "Rapid game · 5 min",
-      state: "current",
-      icon: "play" as const,
-    },
-    {
-      type: "Scenario game",
-      title: "What would you say?",
-      detail: isParent ? "The car ride home · 8 min" : "Feedback under pressure · 8 min",
-      state: "next",
-      icon: "book" as const,
-    },
-    {
-      type: "Dialogue game",
-      title: isParent ? "After the semifinal" : "After the final whistle",
-      detail: "Choose your words · 6 min",
-      state: "locked",
-      icon: "shield" as const,
-    },
-    {
-      type: "Real-world practice",
-      title: "Try it this week",
-      detail: "Choose one action · 3 min",
-      state: "locked",
-      icon: "check" as const,
-    },
-    {
-      type: "Lesson + game",
-      title: "Normal, Watch, or Act",
-      detail: "Recognize warning signs · 10 min",
-      state: "locked",
-      icon: "shield" as const,
-    },
-  ];
-
-  return (
-    <div className="mx-auto max-w-[1180px] px-5 py-8 sm:px-9 lg:py-12">
-      <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-        <div>
-          <p className="eyebrow">{roleContent[role].label} learning pathway</p>
-          <h1 className="font-display mt-4 text-5xl tracking-[-0.04em] sm:text-6xl">
-            Build skill, one step at a time.
-          </h1>
-          <p className="mt-4 max-w-xl text-sm leading-6 text-black/50">
-            Complete short lessons, practice through games, then use each skill in real life.
-          </p>
-        </div>
-        <div className="flex gap-3">
-          <div className="rounded-2xl bg-white px-5 py-3">
-            <p className="text-[9px] font-bold tracking-wider text-black/35 uppercase">Streak</p>
-            <p className="mt-1 text-lg font-bold">{demoData.overview.weeklyStreak}</p>
-          </div>
-          <div className="rounded-2xl bg-white px-5 py-3">
-            <p className="text-[9px] font-bold tracking-wider text-black/35 uppercase">Total XP</p>
-            <p className="mt-1 text-lg font-bold">{demoData.overview.totalXp}</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-10 grid items-start gap-7 lg:grid-cols-[1fr_320px]">
-        <section className="overflow-hidden rounded-[2rem] bg-white">
-          <div className="bg-[#17201d] p-7 text-white sm:p-9">
-            <div className="flex items-start justify-between gap-5">
-              <div>
-                <p className="eyebrow text-[#d9ff54]">
-                  Unit {demoData.learning.unitNumber} of {demoData.learning.unitCount}
-                </p>
-                <h2 className="font-display mt-4 text-4xl">The performance environment</h2>
-                <p className="mt-3 max-w-lg text-sm leading-6 text-white/50">
-                  Learn how your words and reactions shape confidence, autonomy, and trust.
-                </p>
-              </div>
-              <div className="hidden text-right sm:block">
-                <p className="text-xl font-bold">
-                  {demoData.learning.stepsComplete} / {demoData.learning.stepsTotal}
-                </p>
-                <p className="text-[9px] font-bold tracking-wider text-white/35 uppercase">Steps complete</p>
-              </div>
-            </div>
-            <div className="mt-7 h-2 overflow-hidden rounded-full bg-white/10">
-              <div
-                className="h-full rounded-full bg-[#d9ff54]"
-                style={{ width: `${demoData.learning.progressPercent}%` }}
-              />
-            </div>
-          </div>
-
-          <div className="relative px-6 py-10 sm:px-12 sm:py-14">
-            <div className="absolute bottom-16 left-1/2 top-14 w-1 -translate-x-1/2 rounded-full bg-[#e7e5dd]" />
-            <div className="relative space-y-7">
-              {path.map((step, index) => {
-                const done = step.state === "done";
-                const current = step.state === "current";
-                const locked = step.state === "locked";
-                const alignLeft = index % 2 === 0;
-                return (
-                  <div
-                    key={step.title}
-                    className={`flex ${alignLeft ? "justify-start pr-[20%] sm:pr-[38%]" : "justify-end pl-[20%] sm:pl-[38%]"}`}
-                  >
-                    <button
-                      disabled={locked}
-                      onClick={
-                        current
-                          ? () => setGameOpen(true)
-                          : step.state === "next"
-                            ? startLesson
-                            : undefined
-                      }
-                      className={`group relative z-10 flex w-full max-w-[280px] items-center gap-4 rounded-2xl border-2 p-4 text-left transition ${
-                        current
-                          ? "border-[#17201d] bg-[#d9ff54] shadow-[0_7px_0_#17201d] hover:-translate-y-1"
-                          : done
-                            ? "border-[#cce786] bg-[#f3f9e4]"
-                            : locked
-                              ? "cursor-not-allowed border-black/5 bg-[#f3f2ed] text-black/35"
-                              : "border-black/10 bg-white hover:border-black/30"
-                      }`}
-                    >
-                      <span
-                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${
-                          current
-                            ? "bg-[#17201d] text-white"
-                            : done
-                              ? "bg-[#d9ff54]"
-                              : "bg-black/5"
-                        }`}
-                      >
-                        <Icon name={step.icon} className="h-5 w-5" />
-                      </span>
-                      <span>
-                        <span className="block text-[9px] font-bold tracking-wider text-black/40 uppercase">
-                          {step.type}
-                        </span>
-                        <span className="mt-1 block text-sm font-bold">{step.title}</span>
-                        <span className="mt-1 block text-[10px] text-black/40">{step.detail}</span>
-                      </span>
-                      {current && (
-                        <span className="absolute -top-3 right-4 rounded-full bg-[#17201d] px-3 py-1 text-[9px] font-bold tracking-wider text-white uppercase">
-                          Start here
-                        </span>
-                      )}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        <aside className="space-y-5 lg:sticky lg:top-28">
-          <div className="rounded-[2rem] bg-[#d9ff54] p-7">
-            <p className="eyebrow">Up next</p>
-            <h2 className="font-display mt-4 text-3xl">
-              {isParent ? "Cheer or Coach?" : "Behavior or Person?"}
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-black/55">
-              Make quick calls on real phrases and learn how language affects an athlete.
-            </p>
-            <div className="mt-5 flex items-center gap-4 text-[10px] font-bold tracking-wider text-black/45 uppercase">
-              <span>5 min</span><span>4 rounds</span><span>{demoData.learning.exampleGameXp} XP</span>
-            </div>
-            <button
-              onClick={() => setGameOpen(true)}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-[#17201d] px-5 py-3.5 text-sm font-bold text-white"
-            >
-              <Icon name="play" className="h-4 w-4" /> Play example game
-            </button>
-          </div>
-          <div className="rounded-[2rem] bg-white p-7">
-            <div className="flex items-center justify-between">
-              <p className="eyebrow">Weekly goal</p>
-              <span className="text-sm font-bold">
-                {demoData.learning.weeklyGoalComplete} / {demoData.learning.weeklyGoalTotal}
-              </span>
-            </div>
-            <div className="mt-5 flex gap-2">
-              {demoData.learning.weeklyGoalDays.map((complete, index) => (
-                <div
-                  key={index}
-                  className={`h-3 flex-1 rounded-full ${complete ? "bg-[#d9ff54]" : "bg-black/10"}`}
-                />
-              ))}
-            </div>
-            <p className="mt-4 text-xs leading-5 text-black/45">
-              Complete one more learning activity to reach this week&apos;s goal.
-            </p>
-          </div>
-          <div className="rounded-[2rem] bg-[#efe7ff] p-7">
-            <p className="eyebrow">How the path works</p>
-            <div className="mt-5 space-y-3 text-xs leading-5 text-black/55">
-              <p><strong className="text-black">Learn</strong> one practical principle.</p>
-              <p><strong className="text-black">Play</strong> to practice under pressure.</p>
-              <p><strong className="text-black">Apply</strong> it in a real conversation.</p>
-              <p><strong className="text-black">Reflect</strong> on what happened.</p>
-            </div>
-          </div>
-        </aside>
-      </div>
+      <iframe
+        key={role}
+        src={`/fallon-course-player.html?role=${role}&embedded=1`}
+        title={`${roleContent[role].label} course player`}
+        className="mt-10 min-h-[1100px] w-full border-0"
+      />
     </div>
   );
 }
@@ -1211,25 +839,178 @@ function SupportHub({ openCrisis }: { openCrisis: () => void }) {
   );
 }
 
+function CoachHome({
+  openLearn,
+  changeRole,
+}: {
+  openLearn: () => void;
+  changeRole: (role: Role) => void;
+}) {
+  const team = demoData.team;
+  const course = demoData.courses.coach;
+
+  return (
+    <div className="mx-auto max-w-[1328px] px-5 py-10 sm:px-9 lg:py-14">
+      <div className="mb-8 flex sm:hidden">
+        <div className="flex rounded-full bg-black/5 p-1">
+          {(["parent", "coach"] as Role[]).map((item) => (
+            <button
+              key={item}
+              onClick={() => changeRole(item)}
+              className={`rounded-full px-4 py-2 text-xs font-bold capitalize ${
+                item === "coach" ? "bg-white shadow-sm" : "text-black/50"
+              }`}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <p className="eyebrow">Coach portal</p>
+        <h1 className="font-display mt-4 text-5xl leading-none tracking-[-0.04em] sm:text-6xl">
+          {team.name}
+        </h1>
+      </div>
+
+      <section className="mt-12 grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
+        <div className="rounded-[2rem] bg-white p-7 sm:p-9">
+          <div className="flex items-start justify-between gap-5">
+            <div>
+              <p className="eyebrow">Team completion</p>
+              <h2 className="font-display mt-4 text-4xl tracking-[-0.03em]">
+                {team.completion.percent}% complete
+              </h2>
+            </div>
+            <span className="rounded-full bg-[#eef4d4] px-3 py-2 text-xs font-bold">
+              {team.completion.parentsComplete + team.completion.coachesComplete} of{" "}
+              {team.completion.parentsTotal + team.completion.coachesTotal}
+            </span>
+          </div>
+          <div className="mt-8 h-2 overflow-hidden rounded-full bg-black/10">
+            <div
+              className="h-full rounded-full bg-[#17201d]"
+              style={{ width: `${team.completion.percent}%` }}
+            />
+          </div>
+          <div className="mt-6 grid grid-cols-2 gap-4">
+            <div className="rounded-2xl bg-[#f4f2eb] p-5">
+              <p className="text-[10px] font-bold tracking-wider text-black/40 uppercase">
+                Parents
+              </p>
+              <p className="mt-2 text-xl font-bold">
+                {team.completion.parentsComplete} of {team.completion.parentsTotal}
+              </p>
+            </div>
+            <div className="rounded-2xl bg-[#f4f2eb] p-5">
+              <p className="text-[10px] font-bold tracking-wider text-black/40 uppercase">
+                Coaches
+              </p>
+              <p className="mt-2 text-xl font-bold">
+                {team.completion.coachesComplete} of {team.completion.coachesTotal}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-[2rem] bg-[#efe7ff] p-7 sm:p-9">
+          <p className="eyebrow">Your course progress</p>
+          <h2 className="mt-6 text-xl font-bold leading-7">{course.title}</h2>
+          <div className="mt-8 flex items-end justify-between">
+            <span className="font-display text-5xl">{course.progress}%</span>
+            <span className="rounded-full bg-white/70 px-3 py-2 text-xs font-bold">
+              {course.status}
+            </span>
+          </div>
+          <div className="mt-5 h-2 overflow-hidden rounded-full bg-black/10">
+            <div
+              className="h-full rounded-full bg-[#17201d]"
+              style={{ width: `${course.progress}%` }}
+            />
+          </div>
+          <button
+            onClick={openLearn}
+            className="mt-7 flex items-center gap-2 text-sm font-bold"
+          >
+            Continue course <Icon name="arrow" className="h-4 w-4" />
+          </button>
+        </div>
+      </section>
+
+      <section className="mt-5 overflow-hidden rounded-[2rem] bg-white">
+        <div className="border-b border-black/10 p-7 sm:px-9">
+          <p className="eyebrow">Team roster</p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[680px] border-collapse text-left">
+            <thead>
+              <tr className="border-b border-black/10 text-[10px] font-bold tracking-wider text-black/40 uppercase">
+                <th className="px-9 py-4">Name</th>
+                <th className="px-6 py-4">Role</th>
+                <th className="px-6 py-4">Course status</th>
+                <th className="px-9 py-4 text-right">Completion date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {team.roster.map((person) => (
+                <tr key={person.name} className="border-b border-black/5 last:border-0">
+                  <td className="px-9 py-4 text-sm font-bold">{person.name}</td>
+                  <td className="px-6 py-4 text-sm text-black/55">{person.role}</td>
+                  <td className="px-6 py-4">
+                    <span className="rounded-full bg-[#f4f2eb] px-3 py-1.5 text-xs font-bold">
+                      {person.status}
+                    </span>
+                  </td>
+                  <td className="px-9 py-4 text-right text-sm text-black/45">
+                    {person.completed}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mt-5 rounded-[2rem] bg-[#17201d] p-7 text-white sm:p-9">
+        <p className="eyebrow text-[#d9ff54]">Team pulse</p>
+        <div className="mt-7 grid gap-3 sm:grid-cols-5">
+          {team.pulse.map(([area, average]) => (
+            <div key={area} className="rounded-2xl border border-white/10 p-5">
+              <p className="text-xs text-white/50">{area}</p>
+              <p className="font-display mt-2 text-4xl">{average}</p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-6 text-xs text-white/45">
+          Team average. Individual check-ins are private to each family.
+        </p>
+      </section>
+    </div>
+  );
+}
+
 function Portal({
   role,
   setRole,
   goHome,
-  startLesson,
 }: {
   role: Role;
   setRole: (role: Role) => void;
   goHome: () => void;
-  startLesson: () => void;
 }) {
   const content = roleContent[role];
   const [page, setPage] = useState<PortalPage>("overview");
   const [crisisOpen, setCrisisOpen] = useState(false);
+  const changeRole = (nextRole: Role) => {
+    setRole(nextRole);
+    setPage("overview");
+  };
 
-  if (page === "checkin") {
+  if (role === "parent" && page === "checkin") {
     return (
       <main className="min-h-screen bg-[#f4f2eb] text-[#171b19]">
-        <PortalHeader role={role} setRole={setRole} goHome={goHome} page={page} setPage={setPage} />
+        <PortalHeader role={role} setRole={changeRole} goHome={goHome} page={page} setPage={setPage} />
         <DemoBanner />
         <WeeklyCheckIn
           role={role}
@@ -1244,15 +1025,17 @@ function Portal({
 
   return (
     <main className="min-h-screen bg-[#f4f2eb] text-[#171b19]">
-      <PortalHeader role={role} setRole={setRole} goHome={goHome} page={page} setPage={setPage} />
+      <PortalHeader role={role} setRole={changeRole} goHome={goHome} page={page} setPage={setPage} />
       <DemoBanner />
 
-      {page === "insights" ? (
+      {role === "parent" && page === "insights" ? (
         <WellbeingInsights startCheckIn={() => setPage("checkin")} />
       ) : page === "learn" ? (
-        <LearnHub role={role} startLesson={startLesson} />
+        <LearnHub role={role} />
       ) : page === "support" ? (
         <SupportHub openCrisis={() => setCrisisOpen(true)} />
+      ) : role === "coach" ? (
+        <CoachHome openLearn={() => setPage("learn")} changeRole={changeRole} />
       ) : (
       <div className="mx-auto max-w-[1328px] px-5 py-10 sm:px-9 lg:py-14">
         <div className="mb-8 flex sm:hidden">
@@ -1260,7 +1043,7 @@ function Portal({
             {(["parent", "coach"] as Role[]).map((item) => (
               <button
                 key={item}
-                onClick={() => setRole(item)}
+                onClick={() => changeRole(item)}
                 className={`rounded-full px-4 py-2 text-xs font-bold capitalize ${
                   role === item ? "bg-white shadow-sm" : "text-black/50"
                 }`}
@@ -1439,34 +1222,28 @@ function Portal({
             <button onClick={() => setPage("learn")} className="text-xs font-bold">View academy</button>
           </div>
           <div className="mt-7 grid gap-4 lg:grid-cols-3">
-            {content.modules.map(([title, lessons, duration, progress], index) => (
-              <button
-                key={title}
-                onClick={index === 0 ? startLesson : undefined}
-                className="group rounded-3xl border border-black/10 bg-white p-6 text-left transition hover:-translate-y-1 hover:shadow-xl hover:shadow-black/5"
-              >
-                <div className="flex items-start justify-between">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#eef0e9] text-sm font-bold">
-                    {index + 1}
-                  </span>
-                  {Number(progress) > 0 && (
-                    <span className="text-xs font-bold text-black/45">{progress}%</span>
-                  )}
-                </div>
-                <h3 className="mt-10 text-xl font-bold leading-6">{title}</h3>
-                <div className="mt-4 flex items-center gap-4 text-xs text-black/45">
-                  <span>{lessons}</span>
-                  <span className="h-1 w-1 rounded-full bg-black/25" />
-                  <span>{duration}</span>
-                </div>
-                <div className="mt-7 h-1 overflow-hidden rounded-full bg-black/10">
-                  <div
-                    className="h-full rounded-full bg-[#17201d]"
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
-              </button>
-            ))}
+            <button
+              onClick={() => setPage("learn")}
+              className="group rounded-3xl border border-black/10 bg-white p-6 text-left transition hover:-translate-y-1 hover:shadow-xl hover:shadow-black/5"
+            >
+              <div className="flex items-start justify-between">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#eef0e9] text-sm font-bold">
+                  1
+                </span>
+                <span className="text-xs font-bold text-black/45">
+                  {demoData.courses.parent.progress}%
+                </span>
+              </div>
+              <h3 className="mt-10 text-xl font-bold leading-6">
+                {demoData.courses.parent.title}
+              </h3>
+              <div className="mt-7 h-1 overflow-hidden rounded-full bg-black/10">
+                <div
+                  className="h-full rounded-full bg-[#17201d]"
+                  style={{ width: `${demoData.courses.parent.progress}%` }}
+                />
+              </div>
+            </button>
           </div>
         </section>
       </div>
@@ -1497,13 +1274,20 @@ function PortalHeader({
           <Brand />
         </div>
         <nav className="hidden items-center gap-1 rounded-full bg-black/5 p-1 lg:flex">
-          {[
-            ["overview", "Home"],
-            ["checkin", "Weekly check-in"],
-            ["insights", "Trends"],
-            ["learn", "Learn"],
-            ["support", "Support"],
-          ].map(([value, label]) => (
+          {(role === "coach"
+            ? [
+                ["overview", "Home"],
+                ["learn", "Learn"],
+                ["support", "Support"],
+              ]
+            : [
+                ["overview", "Home"],
+                ["checkin", "Weekly check-in"],
+                ["insights", "Trends"],
+                ["learn", "Learn"],
+                ["support", "Support"],
+              ]
+          ).map(([value, label]) => (
             <button
               key={value}
               onClick={() => setPage(value as PortalPage)}
@@ -1541,13 +1325,20 @@ function PortalHeader({
         </div>
       </div>
       <nav className="flex justify-start gap-1 overflow-x-auto border-t border-black/5 px-3 py-2 sm:justify-center lg:hidden">
-        {[
-          ["overview", "Home"],
-          ["checkin", "Check-in"],
-          ["insights", "Trends"],
-          ["learn", "Learn"],
-          ["support", "Support"],
-        ].map(([value, label]) => (
+        {(role === "coach"
+          ? [
+              ["overview", "Home"],
+              ["learn", "Learn"],
+              ["support", "Support"],
+            ]
+          : [
+              ["overview", "Home"],
+              ["checkin", "Check-in"],
+              ["insights", "Trends"],
+              ["learn", "Learn"],
+              ["support", "Support"],
+            ]
+        ).map(([value, label]) => (
           <button
             key={value}
             onClick={() => setPage(value as PortalPage)}
@@ -1560,99 +1351,6 @@ function PortalHeader({
         ))}
       </nav>
     </header>
-  );
-}
-
-function Lesson({
-  role,
-  exit,
-}: {
-  role: Role;
-  exit: () => void;
-}) {
-  const [step, setStep] = useState(0);
-  const [crisisOpen, setCrisisOpen] = useState(false);
-  const steps = [
-    {
-      label: "Principle 01",
-      title: "Connect before you correct.",
-      body: "The first moments after a difficult performance are not the time for analysis. Your athlete's nervous system needs safety before it can receive feedback.",
-    },
-    {
-      label: "Try this",
-      title: "Lead with curiosity.",
-      body: 'Replace “What happened out there?” with “How are you feeling about that one?” Then listen without trying to solve, teach, or reframe.',
-    },
-    {
-      label: "Key takeaway",
-      title: "Regulation comes first.",
-      body: "When athletes feel seen rather than assessed, they recover faster and become more capable of evaluating their own performance honestly.",
-    },
-  ];
-  const current = steps[step];
-  return (
-    <main className="flex min-h-screen flex-col bg-[#f7f5ef] text-[#171b19]">
-      <header className="flex items-center justify-between border-b border-black/10 px-5 py-4 sm:px-9">
-        <button onClick={exit} className="flex items-center gap-2 text-sm font-bold">
-          <Icon name="back" className="h-5 w-5" /> Back to pathway
-        </button>
-        <p className="hidden text-xs font-bold tracking-wider text-black/40 uppercase sm:block">
-          {roleContent[role].label} pathway · Module 1
-        </p>
-        <span className="text-xs font-bold">{step + 1} / {steps.length}</span>
-      </header>
-      <DemoBanner />
-      <div className="h-1 bg-black/10">
-        <div
-          className="h-full bg-[#17201d] transition-all duration-500"
-          style={{ width: `${((step + 1) / steps.length) * 100}%` }}
-        />
-      </div>
-      <section className="flex flex-1 items-center px-5 py-14 sm:px-9">
-        <div className="mx-auto grid w-full max-w-[1120px] items-center gap-12 lg:grid-cols-[0.82fr_1.18fr]">
-          <div>
-            <span className="eyebrow">{current.label}</span>
-            <h1 className="font-display mt-5 text-5xl leading-[0.95] tracking-[-0.045em] sm:text-6xl">
-              {current.title}
-            </h1>
-            <p className="mt-7 max-w-xl text-lg leading-8 text-[#5f6662]">{current.body}</p>
-          </div>
-          <div className="relative flex min-h-[440px] items-center justify-center overflow-hidden rounded-[2rem] bg-[#17201d] p-8 text-white">
-            <div className="lesson-orbit absolute h-80 w-80 rounded-full border border-white/10" />
-            <div className="lesson-orbit-reverse absolute h-56 w-56 rounded-full border border-white/10" />
-            <div
-              className="relative z-10 flex h-40 w-40 items-center justify-center rounded-full text-center text-[#171b19]"
-              style={{ backgroundColor: roleContent[role].accent }}
-            >
-              {step === 0 ? (
-                <Icon name="shield" className="h-12 w-12" />
-              ) : step === 1 ? (
-                <Icon name="book" className="h-12 w-12" />
-              ) : (
-                <Icon name="check" className="h-12 w-12" />
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-      <footer className="border-t border-black/10 bg-white px-5 py-4 sm:px-9">
-        <div className="mx-auto flex max-w-[1120px] items-center justify-between">
-          <div className="flex items-center gap-2 text-xs text-black/45">
-            <Icon name="clock" className="h-4 w-4" />
-            3 min remaining
-          </div>
-          <button
-            onClick={() => (step < steps.length - 1 ? setStep(step + 1) : exit())}
-            className="flex items-center gap-3 rounded-full bg-[#171b19] px-6 py-3.5 text-sm font-bold text-white transition hover:scale-[1.02]"
-          >
-            {step < steps.length - 1 ? "Continue" : "Complete lesson"}
-            <Icon name={step < steps.length - 1 ? "arrow" : "check"} className="h-4 w-4" />
-          </button>
-        </div>
-      </footer>
-      <PortalFooter openCrisis={() => setCrisisOpen(true)} />
-      {crisisOpen && <CrisisPanel close={() => setCrisisOpen(false)} />}
-    </main>
   );
 }
 
@@ -1669,15 +1367,12 @@ export function MainApp() {
 
   return view === "home" ? (
     <Home openPortal={openPortal} />
-  ) : view === "portal" ? (
+  ) : (
     <Portal
       role={role}
       setRole={setRole}
       goHome={() => setView("home")}
-      startLesson={() => setView("lesson")}
     />
-  ) : (
-    <Lesson role={role} exit={() => setView("portal")} />
   );
 }
 

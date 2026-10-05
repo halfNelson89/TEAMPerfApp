@@ -37,8 +37,47 @@ export const demoData = {
     weeklyGoalDays: [true, true, false],
     exampleGameXp: 100,
   },
-  courseProgress: {
-    parent: [72, 20, 0],
-    coach: [72, 20, 0],
+  courses: {
+    parent: {
+      title: "The Car Ride Home: a course for sports parents",
+      status: "In progress",
+      progress: 72,
+    },
+    coach: {
+      title: "Coaching the Whole Athlete: a course for coaches",
+      status: "In progress",
+      progress: 58,
+    },
+  },
+  team: {
+    name: "U14 Girls, Fall season",
+    completion: {
+      parentsComplete: 5,
+      parentsTotal: 9,
+      coachesComplete: 2,
+      coachesTotal: 3,
+      percent: 58,
+    },
+    roster: [
+      { name: "Jordan Davis", role: "Coach", status: "In progress", completed: "—" },
+      { name: "Elena Ruiz", role: "Coach", status: "Complete", completed: "Sep 4" },
+      { name: "Marcus Lee", role: "Coach", status: "Complete", completed: "Sep 7" },
+      { name: "Avery Bennett", role: "Parent", status: "Complete", completed: "Sep 2" },
+      { name: "Sofia Martinez", role: "Parent", status: "Complete", completed: "Sep 5" },
+      { name: "David Chen", role: "Parent", status: "In progress", completed: "—" },
+      { name: "Rachel Thompson", role: "Parent", status: "Not started", completed: "—" },
+      { name: "Nina Patel", role: "Parent", status: "Complete", completed: "Sep 8" },
+      { name: "Chris Morgan", role: "Parent", status: "In progress", completed: "—" },
+      { name: "Tanya Brooks", role: "Parent", status: "Complete", completed: "Sep 10" },
+      { name: "Samuel Wright", role: "Parent", status: "Not started", completed: "—" },
+      { name: "Kelly Foster", role: "Parent", status: "Complete", completed: "Sep 12" },
+    ],
+    pulse: [
+      ["Mood", 78],
+      ["Enjoyment", 82],
+      ["Pressure", 64],
+      ["Recovery", 71],
+      ["Connection", 85],
+    ],
   },
 } as const;
