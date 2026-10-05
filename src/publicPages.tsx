@@ -17,12 +17,12 @@ function PublicHeader() {
             </a>
           ))}
         </nav>
-        <a
-          href="/portal"
-          className="hidden rounded-full bg-[#d9ff54] px-5 py-3 text-sm font-bold sm:block"
-        >
-          Enter portal
-        </a>
+        <div className="hidden items-center gap-3 sm:flex">
+          <a href="/sign-in" className="rounded-full bg-[#d9ff54] px-5 py-3 text-sm font-bold">
+            Sign in
+          </a>
+          <a href="/portal" className="text-xs font-bold text-black/45">View demo</a>
+        </div>
         <details className="relative lg:hidden">
           <summary className="cursor-pointer list-none rounded-full border border-black/15 px-4 py-2.5 text-sm font-bold">
             Menu
@@ -33,9 +33,10 @@ function PublicHeader() {
                 {item.label}
               </a>
             ))}
-            <a href="/portal" className="mt-2 rounded-full bg-[#d9ff54] px-4 py-3 text-center font-bold text-[#171b19]">
-              Enter portal
+            <a href="/sign-in" className="mt-2 rounded-full bg-[#d9ff54] px-4 py-3 text-center font-bold text-[#171b19]">
+              Sign in
             </a>
+            <a href="/portal" className="px-3 py-2 text-center text-xs font-bold text-white/70">View demo</a>
           </nav>
         </details>
       </div>

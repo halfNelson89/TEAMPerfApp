@@ -174,12 +174,12 @@ function Home({
               </a>
             ))}
           </nav>
-          <button
-            onClick={() => openPortal("parent")}
-            className="hidden rounded-full bg-[#d9ff54] px-5 py-3 text-sm font-bold text-[#171b19] transition hover:scale-[1.03] xl:block"
-          >
-            Enter portal
-          </button>
+          <div className="hidden items-center gap-3 xl:flex">
+            <a href="/sign-in" className="rounded-full bg-[#d9ff54] px-5 py-3 text-sm font-bold text-[#171b19] transition hover:scale-[1.03]">
+              Sign in
+            </a>
+            <a href="/portal" className="text-xs font-bold text-white/75 hover:text-white">View demo</a>
+          </div>
           <button
             className="text-white xl:hidden"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -200,12 +200,10 @@ function Home({
                   {item.label}
                 </a>
               ))}
-              <button
-                onClick={() => openPortal("parent")}
-                className="mt-3 rounded-full bg-[#d9ff54] px-5 py-3 font-bold text-[#171b19]"
-              >
-                Enter portal
-              </button>
+              <a href="/sign-in" className="mt-3 rounded-full bg-[#d9ff54] px-5 py-3 text-center font-bold text-[#171b19]">
+                Sign in
+              </a>
+              <a href="/portal" className="px-3 py-2 text-center text-xs font-bold text-white/70">View demo</a>
             </div>
           </div>
         )}
@@ -964,13 +962,15 @@ function Portal({
   role,
   setRole,
   goHome,
+  initialPage,
 }: {
   role: Role;
   setRole: (role: Role) => void;
   goHome: () => void;
+  initialPage: PortalPage;
 }) {
   const content = roleContent[role];
-  const [page, setPage] = useState<PortalPage>("overview");
+  const [page, setPage] = useState<PortalPage>(initialPage);
   const [crisisOpen, setCrisisOpen] = useState(false);
   const changeRole = (nextRole: Role) => {
     setRole(nextRole);
@@ -1277,9 +1277,13 @@ function PortalHeader({
           >
             Exit portal
           </button>
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#17201d] text-xs font-bold text-white">
+          <a
+            href={`/portal/account?role=${role}`}
+            aria-label="Account"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-[#17201d] text-xs font-bold text-white"
+          >
             {demoData.mentor.initials}
-          </span>
+          </a>
         </div>
       </div>
       <nav className="flex justify-start gap-1 overflow-x-auto border-t border-black/5 px-3 py-2 sm:justify-center lg:hidden">
@@ -1331,9 +1335,11 @@ function PortalHeader({
 export function MainApp({
   initialView = "home",
   initialRole = "parent",
+  initialPage = "overview",
 }: {
   initialView?: View;
   initialRole?: Role;
+  initialPage?: PortalPage;
 }) {
   document.title = productConfig.browserTitle;
   const [view, setView] = useState<View>(initialView);
@@ -1350,6 +1356,7 @@ export function MainApp({
       role={role}
       setRole={setRole}
       goHome={() => (window.location.href = "/")}
+      initialPage={initialPage}
     />
   );
 }
@@ -1376,12 +1383,12 @@ export function CoursesPage() {
               </a>
             ))}
           </nav>
-          <a
-            href="/portal"
-            className="rounded-full bg-[#d9ff54] px-5 py-3 text-sm font-bold"
-          >
-            Enter portal
-          </a>
+          <div className="hidden items-center gap-3 sm:flex">
+            <a href="/sign-in" className="rounded-full bg-[#d9ff54] px-5 py-3 text-sm font-bold">
+              Sign in
+            </a>
+            <a href="/portal" className="text-xs font-bold text-black/45">View demo</a>
+          </div>
           <details className="relative xl:hidden">
             <summary className="cursor-pointer list-none rounded-full border border-black/15 px-4 py-2.5 text-sm font-bold">
               Menu
@@ -1392,9 +1399,10 @@ export function CoursesPage() {
                   {item.label}
                 </a>
               ))}
-              <a href="/portal" className="mt-2 rounded-full bg-[#d9ff54] px-4 py-3 text-center font-bold text-[#171b19]">
-                Enter portal
+              <a href="/sign-in" className="mt-2 rounded-full bg-[#d9ff54] px-4 py-3 text-center font-bold text-[#171b19]">
+                Sign in
               </a>
+              <a href="/portal" className="px-3 py-2 text-center text-xs font-bold text-white/70">View demo</a>
             </nav>
           </details>
         </div>

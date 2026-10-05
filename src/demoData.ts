@@ -16,6 +16,8 @@ const u14GirlsRoster = [
 export const demoData = {
   mentor: {
     firstName: "Jordan",
+    lastName: "Davis",
+    email: "jordan@example.com",
     initials: "JD",
   },
   athlete: {
@@ -113,7 +115,7 @@ export const demoData = {
         parents: 9,
         completion: 58,
         complete: 7,
-        joinLink: "https://teaminstitute.org/join/u14-girls",
+        joinLink: "/join/U14GIRLS",
         roster: u14GirlsRoster,
       },
       {
@@ -194,5 +196,27 @@ export const demoData = {
     plan: "Education, 4 teams, Fall season",
     wellbeingContact: "Not set",
     reportGenerated: "September 24, 2026",
+    invoices: [
+      { date: "August 15, 2026", description: "Fall season · 4 teams", amount: "$796", status: "Paid" },
+      { date: "November 15, 2026", description: "Winter season deposit", amount: "$398", status: "Due" },
+    ],
+  },
+  account: {
+    teams: [
+      { name: "U14 Girls", role: "Coach" },
+      { name: "U12 Coed", role: "Parent" },
+    ],
+    emailPreferences: {
+      courseReminders: true,
+      teamAnnouncements: true,
+    },
+  },
+  join: {
+    code: "U14GIRLS",
+    teamName: "U14 Girls",
+    organization: "Ridgeview Athletic Club",
+    sport: "Soccer",
+    season: "Fall season",
+    dueDate: "September 15, 2026",
   },
 } as const;

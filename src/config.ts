@@ -4,6 +4,7 @@ export const productConfig = {
   browserTitle: "TEAM Institute | Performance Training for Coaches, Parents, and Youth Athletes",
   prices: {
     education: "$199 per team, per season",
+    educationAmount: 199,
     complete: "$30 per athlete, per season, capped at $60 per athlete per year",
     liveSessions: {
       display: "By quote",

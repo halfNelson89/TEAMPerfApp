@@ -3,7 +3,7 @@ import { productConfig } from "./config";
 import { demoData } from "./demoData";
 import { Brand, CrisisPanel, DemoBanner, PortalFooter } from "./pages";
 
-type AdminScreen = "overview" | "teams" | "people" | "reports" | "settings" | "team";
+type AdminScreen = "overview" | "teams" | "people" | "reports" | "settings" | "billing" | "team";
 type Team = (typeof demoData.admin.teams)[number] | {
   id: string;
   name: string;
@@ -24,6 +24,7 @@ const navItems = [
   ["People", "/portal/admin/people"],
   ["Reports", "/portal/admin/reports"],
   ["Settings", "/portal/admin/settings"],
+  ["Billing", "/portal/admin/billing"],
 ] as const;
 
 function AdminHeader({ screen }: { screen: AdminScreen }) {
@@ -58,6 +59,13 @@ function AdminHeader({ screen }: { screen: AdminScreen }) {
         </div>
         <a href="/" className="hidden rounded-full border border-black/15 px-4 py-2.5 text-xs font-bold sm:block">
           Exit portal
+        </a>
+        <a
+          href="/portal/account?role=admin"
+          aria-label="Account"
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-[#17201d] text-xs font-bold text-white"
+        >
+          {demoData.mentor.initials}
         </a>
       </div>
       <div className="border-t border-black/5 lg:hidden">
@@ -275,9 +283,10 @@ function TeamDetail({ team }: { team: Team }) {
   const [copied, setCopied] = useState(false);
   const roster = team.roster.filter((person) => filter === "All" || person.status === filter);
   const unfinished = team.roster.filter((person) => person.status !== "Complete").length;
+  const joinUrl = new URL(team.joinLink, window.location.origin).href;
   const copyLink = async () => {
     try {
-      await navigator.clipboard.writeText(team.joinLink);
+      await navigator.clipboard.writeText(joinUrl);
     } catch {
       // Clipboard access is not available in every preview environment.
     }
@@ -301,14 +310,14 @@ function TeamDetail({ team }: { team: Team }) {
         <section className="mt-10 grid gap-5 rounded-[2rem] bg-[#efe7ff] p-7 sm:p-9 lg:grid-cols-[1fr_auto]">
           <div>
             <p className="eyebrow">Join link</p>
-            <p className="mt-4 break-all text-sm font-bold">{team.joinLink}</p>
+            <p className="mt-4 break-all text-sm font-bold">{joinUrl}</p>
             <p className="mt-4 text-sm leading-6 text-black/55">Share this at your pre-season meeting. Coaches and parents join in about two minutes.</p>
             <button onClick={copyLink} className="mt-6 rounded-full bg-[#171b19] px-6 py-3 text-sm font-bold text-white">
               {copied ? "Copied." : "Copy link"}
             </button>
           </div>
           <img
-            src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(team.joinLink)}`}
+            src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(joinUrl)}`}
             alt={`QR code for ${team.name} join link`}
             className="h-44 w-44 rounded-xl bg-white p-2"
           />
@@ -501,6 +510,76 @@ function SettingsScreen() {
   );
 }
 
+function BillingScreen({ teams }: { teams: Team[] }) {
+  const [notice, setNotice] = useState(false);
+  const seasonTotal = teams.length * productConfig.prices.educationAmount;
+  return (
+    <AdminPage screen="billing">
+      <div className={pageWrap}>
+        <PageHeading eyebrow="Administrator portal" title="Billing" />
+        <section className="mt-10 grid gap-5 rounded-[2rem] bg-[#efe7ff] p-7 sm:grid-cols-3 sm:p-9">
+          <div>
+            <p className="text-[10px] font-bold tracking-wider text-black/40 uppercase">Current plan</p>
+            <p className="mt-3 text-lg font-bold">{demoData.admin.plan}</p>
+          </div>
+          <div>
+            <p className="text-[10px] font-bold tracking-wider text-black/40 uppercase">Teams</p>
+            <p className="font-display mt-3 text-4xl">{teams.length}</p>
+          </div>
+          <div>
+            <p className="text-[10px] font-bold tracking-wider text-black/40 uppercase">Season total</p>
+            <p className="font-display mt-3 text-4xl">${seasonTotal}</p>
+            <p className="mt-2 text-xs text-black/45">{productConfig.prices.education}</p>
+          </div>
+        </section>
+        <section className="mt-5 overflow-hidden rounded-[2rem] bg-white">
+          <div className="border-b border-black/10 p-7 sm:px-9">
+            <h2 className="text-xl font-bold">Invoices</h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[680px] border-collapse text-left">
+              <thead>
+                <tr className="border-b border-black/10 text-[10px] font-bold tracking-wider text-black/40 uppercase">
+                  <th className="px-9 py-4">Date</th>
+                  <th className="px-6 py-4">Description</th>
+                  <th className="px-6 py-4">Amount</th>
+                  <th className="px-9 py-4 text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {demoData.admin.invoices.map((invoice) => (
+                  <tr key={`${invoice.date}-${invoice.description}`} className="border-b border-black/5 last:border-0">
+                    <td className="px-9 py-4 text-sm">{invoice.date}</td>
+                    <td className="px-6 py-4 text-sm font-bold">{invoice.description}</td>
+                    <td className="px-6 py-4 text-sm">{invoice.amount}</td>
+                    <td className="px-9 py-4 text-right text-sm font-bold">{invoice.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+          {["Update payment method", "Download invoice"].map((label) => (
+            <button
+              key={label}
+              onClick={() => setNotice(true)}
+              className="rounded-full bg-[#171b19] px-6 py-3.5 text-sm font-bold text-white"
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        {notice && (
+          <p role="status" className="mt-5 rounded-2xl bg-[#fff8df] p-5 text-sm font-bold">
+            Available when the back end is connected.
+          </p>
+        )}
+      </div>
+    </AdminPage>
+  );
+}
+
 export function AdminPortal({ path }: { path: string }) {
   const [teams, setTeams] = useState<Team[]>(() => {
     try {
@@ -525,5 +604,6 @@ export function AdminPortal({ path }: { path: string }) {
   if (path === "/portal/admin/people") return <PeopleScreen teams={teams} />;
   if (path === "/portal/admin/reports") return <ReportsScreen teams={teams} />;
   if (path === "/portal/admin/settings") return <SettingsScreen />;
+  if (path === "/portal/admin/billing") return <BillingScreen teams={teams} />;
   return <Overview teams={teams} />;
 }
