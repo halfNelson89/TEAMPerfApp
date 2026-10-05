@@ -99,7 +99,7 @@ export function Brand({ light = false }: { light?: boolean }) {
   );
 }
 
-function DemoBanner() {
+export function DemoBanner() {
   return (
     <div className="border-b border-black/10 bg-[#fff8df] px-5 py-2 text-center text-xs font-medium text-black/60">
       Demo with sample data. Names and scores are examples.
@@ -138,7 +138,7 @@ export function CrisisPanel({ close }: { close: () => void }) {
   );
 }
 
-function PortalFooter({ openCrisis }: { openCrisis: () => void }) {
+export function PortalFooter({ openCrisis }: { openCrisis: () => void }) {
   return (
     <footer className="border-t border-black/10 px-5 py-5 sm:px-9">
       <div className="mx-auto flex max-w-[1328px] justify-end">
@@ -164,7 +164,7 @@ function Home({
 
   return (
     <main className="overflow-hidden bg-[#f4f2eb] text-[#171b19]">
-      <header className="absolute inset-x-0 top-0 z-30">
+      <header className="app-safe-top absolute inset-x-0 top-0 z-30">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 sm:px-9 lg:px-14">
           <Brand light />
           <nav className="hidden items-center gap-6 text-sm font-medium text-white/85 xl:flex">
@@ -829,32 +829,14 @@ function SupportHub({ openCrisis }: { openCrisis: () => void }) {
 
 function CoachHome({
   openLearn,
-  changeRole,
 }: {
   openLearn: () => void;
-  changeRole: (role: Role) => void;
 }) {
   const team = demoData.team;
   const course = demoData.courses.coach;
 
   return (
     <div className="mx-auto max-w-[1328px] px-5 py-10 sm:px-9 lg:py-14">
-      <div className="mb-8 flex sm:hidden">
-        <div className="flex rounded-full bg-black/5 p-1">
-          {(["parent", "coach"] as Role[]).map((item) => (
-            <button
-              key={item}
-              onClick={() => changeRole(item)}
-              className={`rounded-full px-4 py-2 text-xs font-bold capitalize ${
-                item === "coach" ? "bg-white shadow-sm" : "text-black/50"
-              }`}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-      </div>
-
       <div>
         <p className="eyebrow">Coach portal</p>
         <h1 className="font-display mt-4 text-5xl leading-none tracking-[-0.04em] sm:text-6xl">
@@ -1023,24 +1005,9 @@ function Portal({
       ) : page === "support" ? (
         <SupportHub openCrisis={() => setCrisisOpen(true)} />
       ) : role === "coach" ? (
-        <CoachHome openLearn={() => setPage("learn")} changeRole={changeRole} />
+        <CoachHome openLearn={() => setPage("learn")} />
       ) : (
       <div className="mx-auto max-w-[1328px] px-5 py-10 sm:px-9 lg:py-14">
-        <div className="mb-8 flex sm:hidden">
-          <div className="flex rounded-full bg-black/5 p-1">
-            {(["parent", "coach"] as Role[]).map((item) => (
-              <button
-                key={item}
-                onClick={() => changeRole(item)}
-                className={`rounded-full px-4 py-2 text-xs font-bold capitalize ${
-                  role === item ? "bg-white shadow-sm" : "text-black/50"
-                }`}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-        </div>
         <div className="flex flex-col justify-between gap-7 lg:flex-row lg:items-end">
           <div>
             <p className="eyebrow">{content.label} mental fitness portal</p>
@@ -1256,7 +1223,7 @@ function PortalHeader({
   setPage: (page: PortalPage) => void;
 }) {
   return (
-    <header className="sticky top-0 z-30 border-b border-black/10 bg-[#f4f2eb]/90 backdrop-blur-lg">
+    <header className="app-safe-top sticky top-0 z-30 border-b border-black/10 bg-[#f4f2eb]/90 backdrop-blur-lg">
       <div className="mx-auto flex max-w-[1328px] items-center justify-between px-5 py-4 sm:px-9">
         <div onClick={goHome}>
           <Brand />
@@ -1300,6 +1267,9 @@ function PortalHeader({
                 {item}
               </button>
             ))}
+            <a href="/portal/admin" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">
+              Admin
+            </a>
           </div>
           <button
             onClick={goHome}
@@ -1338,19 +1308,39 @@ function PortalHeader({
           </button>
         ))}
       </nav>
+      <div className="flex justify-center gap-1 border-t border-black/5 p-2 sm:hidden">
+        {(["parent", "coach"] as Role[]).map((item) => (
+          <button
+            key={item}
+            onClick={() => setRole(item)}
+            className={`rounded-full px-4 py-2 text-xs font-bold capitalize ${
+              role === item ? "bg-white shadow-sm" : "text-black/50"
+            }`}
+          >
+            {item}
+          </button>
+        ))}
+        <a href="/portal/admin" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">
+          Admin
+        </a>
+      </div>
     </header>
   );
 }
 
-export function MainApp() {
+export function MainApp({
+  initialView = "home",
+  initialRole = "parent",
+}: {
+  initialView?: View;
+  initialRole?: Role;
+}) {
   document.title = productConfig.browserTitle;
-  const [view, setView] = useState<View>("portal");
-  const [role, setRole] = useState<Role>("parent");
+  const [view, setView] = useState<View>(initialView);
+  const [role, setRole] = useState<Role>(initialRole);
 
   const openPortal = (nextRole: Role) => {
-    setRole(nextRole);
-    setView("portal");
-    window.scrollTo(0, 0);
+    window.location.href = nextRole === "coach" ? "/portal?role=coach" : "/portal";
   };
 
   return view === "home" ? (
@@ -1359,7 +1349,7 @@ export function MainApp() {
     <Portal
       role={role}
       setRole={setRole}
-      goHome={() => setView("home")}
+      goHome={() => (window.location.href = "/")}
     />
   );
 }
@@ -1369,7 +1359,7 @@ export function CoursesPage() {
 
   return (
     <div className="min-h-screen bg-[#f4f2eb] text-[#171b19]">
-      <header className="border-b border-black/10 bg-[#f4f2eb]">
+      <header className="app-safe-top border-b border-black/10 bg-[#f4f2eb]">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 sm:px-9 lg:px-14">
           <div onClick={() => (window.location.href = "/")}>
             <Brand />
@@ -1387,7 +1377,7 @@ export function CoursesPage() {
             ))}
           </nav>
           <a
-            href="/"
+            href="/portal"
             className="rounded-full bg-[#d9ff54] px-5 py-3 text-sm font-bold"
           >
             Enter portal
@@ -1402,7 +1392,7 @@ export function CoursesPage() {
                   {item.label}
                 </a>
               ))}
-              <a href="/" className="mt-2 rounded-full bg-[#d9ff54] px-4 py-3 text-center font-bold text-[#171b19]">
+              <a href="/portal" className="mt-2 rounded-full bg-[#d9ff54] px-4 py-3 text-center font-bold text-[#171b19]">
                 Enter portal
               </a>
             </nav>

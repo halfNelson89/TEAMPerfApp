@@ -5,7 +5,7 @@ import { Brand, CrisisPanel } from "./pages";
 
 function PublicHeader() {
   return (
-    <header className="relative z-30 border-b border-black/10 bg-[#f4f2eb]">
+    <header className="app-safe-top relative z-30 border-b border-black/10 bg-[#f4f2eb]">
       <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-5 px-5 py-5 sm:px-9 lg:px-14">
         <div onClick={() => (window.location.href = "/")}>
           <Brand />
@@ -18,7 +18,7 @@ function PublicHeader() {
           ))}
         </nav>
         <a
-          href="/"
+          href="/portal"
           className="hidden rounded-full bg-[#d9ff54] px-5 py-3 text-sm font-bold sm:block"
         >
           Enter portal
@@ -33,7 +33,7 @@ function PublicHeader() {
                 {item.label}
               </a>
             ))}
-            <a href="/" className="mt-2 rounded-full bg-[#d9ff54] px-4 py-3 text-center font-bold text-[#171b19]">
+            <a href="/portal" className="mt-2 rounded-full bg-[#d9ff54] px-4 py-3 text-center font-bold text-[#171b19]">
               Enter portal
             </a>
           </nav>

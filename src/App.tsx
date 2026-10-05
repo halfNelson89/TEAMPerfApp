@@ -5,9 +5,21 @@ import {
   PricingPage,
   VerifyPage,
 } from "./publicPages";
+import { AdminPortal } from "./adminPortal";
 
 export default function App() {
-  switch (window.location.pathname.replace(/\/+$/, "") || "/") {
+  const path = window.location.pathname.replace(/\/+$/, "") || "/";
+  if (path.startsWith("/portal/admin")) {
+    return <AdminPortal path={path} />;
+  }
+  switch (path) {
+    case "/portal":
+      return (
+        <MainApp
+          initialView="portal"
+          initialRole={new URLSearchParams(window.location.search).get("role") === "coach" ? "coach" : "parent"}
+        />
+      );
     case "/courses":
     case "/Learn":
       return <CoursesPage />;
@@ -20,6 +32,6 @@ export default function App() {
     case "/verify":
       return <VerifyPage />;
     default:
-      return <MainApp />;
+      return <MainApp initialView="home" />;
   }
 }
