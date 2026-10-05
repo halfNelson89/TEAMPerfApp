@@ -55,6 +55,7 @@ function AdminHeader({ screen }: { screen: AdminScreen }) {
           <a href="/portal?role=coach" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">
             Coach
           </a>
+          <a href="/portal/athlete" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">Athlete</a>
           <span className="rounded-full bg-white px-4 py-2 text-xs font-bold shadow-sm">Admin</span>
           <a href="/staff" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">Staff</a>
         </div>
@@ -86,6 +87,7 @@ function AdminHeader({ screen }: { screen: AdminScreen }) {
         <div className="flex justify-center gap-1 border-t border-black/5 p-2 sm:hidden">
           <a href="/portal?role=parent" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">Parent</a>
           <a href="/portal?role=coach" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">Coach</a>
+          <a href="/portal/athlete" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">Athlete</a>
           <span className="rounded-full bg-white px-4 py-2 text-xs font-bold shadow-sm">Admin</span>
           <a href="/staff" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">Staff</a>
         </div>

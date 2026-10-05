@@ -1,6 +1,6 @@
 import { productConfig } from "./config";
 import { demoData } from "./demoData";
-import { Brand } from "./pages";
+import { Brand, DemoBanner } from "./pages";
 
 function StaffHeader({ page }: { page: "overview" | "emails" }) {
   return (
@@ -14,6 +14,7 @@ function StaffHeader({ page }: { page: "overview" | "emails" }) {
         <div className="hidden rounded-full bg-black/5 p-1 lg:flex">
           <a href="/portal?role=parent" className="rounded-full px-3 py-2 text-xs font-bold text-black/45">Parent</a>
           <a href="/portal?role=coach" className="rounded-full px-3 py-2 text-xs font-bold text-black/45">Coach</a>
+          <a href="/portal/athlete" className="rounded-full px-3 py-2 text-xs font-bold text-black/45">Athlete</a>
           <a href="/portal/admin" className="rounded-full px-3 py-2 text-xs font-bold text-black/45">Admin</a>
           <span className="rounded-full bg-white px-3 py-2 text-xs font-bold shadow-sm">Staff</span>
         </div>
@@ -27,6 +28,7 @@ function StaffHeader({ page }: { page: "overview" | "emails" }) {
         <div className="flex justify-start gap-1 overflow-x-auto border-t border-black/5 px-3 py-2">
           <a href="/portal?role=parent" className="shrink-0 rounded-full px-3 py-2 text-xs font-bold text-black/45">Parent</a>
           <a href="/portal?role=coach" className="shrink-0 rounded-full px-3 py-2 text-xs font-bold text-black/45">Coach</a>
+          <a href="/portal/athlete" className="shrink-0 rounded-full px-3 py-2 text-xs font-bold text-black/45">Athlete</a>
           <a href="/portal/admin" className="shrink-0 rounded-full px-3 py-2 text-xs font-bold text-black/45">Admin</a>
           <span className="shrink-0 rounded-full bg-white px-3 py-2 text-xs font-bold shadow-sm">Staff</span>
         </div>
@@ -43,6 +45,7 @@ export function StaffPage() {
   return (
     <main className="min-h-screen bg-[#f4f2eb] text-[#171b19]">
       <StaffHeader page="overview" />
+      <DemoBanner />
       <div className={pageWrap}>
         <p className="eyebrow">Internal staff console</p>
         <h1 className="font-display mt-4 text-5xl tracking-[-0.04em] sm:text-6xl">Staff</h1>
@@ -140,6 +143,7 @@ export function StaffEmailsPage() {
   return (
     <main className="min-h-screen bg-[#f4f2eb] text-[#171b19]">
       <StaffHeader page="emails" />
+      <DemoBanner />
       <div className="mx-auto max-w-[960px] px-5 py-10 sm:px-9 lg:py-14">
         <p className="eyebrow">Internal staff console</p>
         <h1 className="font-display mt-4 text-5xl tracking-[-0.04em] sm:text-6xl">Email templates</h1>
@@ -154,7 +158,7 @@ export function StaffEmailsPage() {
             <p>You have completed {emails.reminder.stopsComplete} of 11 stops. About {emails.reminder.minutesRemaining} minutes remain.</p>
           </EmailPreview>
           <EmailPreview label="Completion" subject={`You completed ${emails.completion.course}`} button="View certificate">
-            <p>Your certificate is ready. Certificate ID: {emails.completion.certificateId}. Anyone can verify it at {emails.completion.site}/verify.</p>
+            <p>Your certificate is ready. Certificate ID: {emails.completion.certificateId}. Anyone can verify it at {productConfig.website}/verify.</p>
           </EmailPreview>
           <EmailPreview label="Monthly summary for administrators" subject={`${emails.summary.organization}: ${emails.summary.completion} percent complete`} button="Open dashboard">
             <div className="overflow-hidden rounded-xl border border-black/10">

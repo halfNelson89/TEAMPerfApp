@@ -13,11 +13,15 @@ import {
   WelcomePage,
 } from "./authPages";
 import { StaffEmailsPage, StaffPage } from "./staffPages";
+import { AthletePortal } from "./athletePortal";
 
 export default function App() {
   const path = window.location.pathname.replace(/\/+$/, "") || "/";
   if (path.startsWith("/portal/admin")) {
     return <AdminPortal path={path} />;
+  }
+  if (path.startsWith("/portal/athlete")) {
+    return <AthletePortal path={path} />;
   }
   if (path === "/portal/account") {
     return <AccountPage />;

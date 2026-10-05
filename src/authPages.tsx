@@ -237,6 +237,8 @@ export function AccountPage() {
   const returnToPortal =
     sourceRole === "admin"
       ? "/portal/admin"
+      : sourceRole === "athlete"
+        ? "/portal/athlete"
       : sourceRole === "coach"
         ? "/portal?role=coach"
         : "/portal";

@@ -1267,6 +1267,9 @@ function PortalHeader({
                 {item}
               </button>
             ))}
+            <a href="/portal/athlete" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">
+              Athlete
+            </a>
             <a href="/portal/admin" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">
               Admin
             </a>
@@ -1327,6 +1330,9 @@ function PortalHeader({
             {item}
           </button>
         ))}
+        <a href="/portal/athlete" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">
+          Athlete
+        </a>
         <a href="/portal/admin" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">
           Admin
         </a>

@@ -248,7 +248,7 @@ export const demoData = {
       {
         name: "Summit United",
         type: "Club",
-        plan: "Complete",
+        plan: "Education",
         teams: 5,
         people: 71,
         completion: 81,
@@ -285,7 +285,6 @@ export const demoData = {
       completion: {
         course: "Coaching the Whole Athlete",
         certificateId: "TEAM-DEMO-2026",
-        site: "teaminstitute.org",
       },
       summary: {
         organization: "Ridgeview Athletic Club",
@@ -298,6 +297,38 @@ export const demoData = {
           { name: "Varsity Track", completion: 50 },
         ],
       },
+    },
+  },
+  athletePreview: {
+    firstName: "Maya",
+    age: 14,
+    team: "U14 Girls",
+    todaySkill: {
+      name: "Reset after a mistake",
+      duration: "3 min",
+    },
+    streak: 4,
+    skillsCompleted: 9,
+    themes: [
+      { name: "Reset after a mistake", sessions: 3, progress: 67 },
+      { name: "Pre-competition routine", sessions: 4, progress: 50 },
+      { name: "Self-talk", sessions: 3, progress: 33 },
+      { name: "Breathing", sessions: 2, progress: 100 },
+      { name: "Sleep and recovery", sessions: 3, progress: 25 },
+      { name: "Handling pressure", sessions: 4, progress: 0 },
+    ],
+    streakCalendar: [
+      { day: "M", complete: true },
+      { day: "T", complete: true },
+      { day: "W", complete: true },
+      { day: "T", complete: true },
+      { day: "F", complete: false },
+      { day: "S", complete: false },
+      { day: "S", complete: false },
+    ],
+    wellbeingContact: {
+      name: "Morgan Reed",
+      role: "Student support coordinator",
     },
   },
 } as const;
