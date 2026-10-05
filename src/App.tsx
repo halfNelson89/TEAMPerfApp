@@ -12,6 +12,7 @@ import {
   SignInPage,
   WelcomePage,
 } from "./authPages";
+import { StaffEmailsPage, StaffPage } from "./staffPages";
 
 export default function App() {
   const path = window.location.pathname.replace(/\/+$/, "") || "/";
@@ -23,6 +24,12 @@ export default function App() {
   }
   if (path.startsWith("/join/")) {
     return <JoinPage code={decodeURIComponent(path.slice("/join/".length))} />;
+  }
+  if (path === "/staff/emails") {
+    return <StaffEmailsPage />;
+  }
+  if (path === "/staff") {
+    return <StaffPage />;
   }
   switch (path) {
     case "/portal":

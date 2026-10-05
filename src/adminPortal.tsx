@@ -56,6 +56,7 @@ function AdminHeader({ screen }: { screen: AdminScreen }) {
             Coach
           </a>
           <span className="rounded-full bg-white px-4 py-2 text-xs font-bold shadow-sm">Admin</span>
+          <a href="/staff" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">Staff</a>
         </div>
         <a href="/" className="hidden rounded-full border border-black/15 px-4 py-2.5 text-xs font-bold sm:block">
           Exit portal
@@ -86,6 +87,7 @@ function AdminHeader({ screen }: { screen: AdminScreen }) {
           <a href="/portal?role=parent" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">Parent</a>
           <a href="/portal?role=coach" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">Coach</a>
           <span className="rounded-full bg-white px-4 py-2 text-xs font-bold shadow-sm">Admin</span>
+          <a href="/staff" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">Staff</a>
         </div>
       </div>
     </header>
@@ -512,11 +514,40 @@ function SettingsScreen() {
 
 function BillingScreen({ teams }: { teams: Team[] }) {
   const [notice, setNotice] = useState(false);
+  const [planState, setPlanState] = useState<"Trial" | "Active" | "Past due">("Active");
   const seasonTotal = teams.length * productConfig.prices.educationAmount;
   return (
     <AdminPage screen="billing">
       <div className={pageWrap}>
-        <PageHeading eyebrow="Administrator portal" title="Billing" />
+        <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+          <PageHeading eyebrow="Administrator portal" title="Billing" />
+          <div>
+            <p className="mb-2 text-[10px] font-bold tracking-wider text-black/40 uppercase">Demo state</p>
+            <div className="flex rounded-full bg-black/5 p-1">
+              {(["Trial", "Active", "Past due"] as const).map((state) => (
+                <button
+                  key={state}
+                  onClick={() => setPlanState(state)}
+                  className={`rounded-full px-4 py-2 text-xs font-bold ${
+                    planState === state ? "bg-white shadow-sm" : "text-black/50"
+                  }`}
+                >
+                  {state}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+        {planState === "Trial" && (
+          <p className="mt-7 rounded-2xl bg-[#eef4d4] p-5 text-sm font-bold">
+            14 days left in your trial.
+          </p>
+        )}
+        {planState === "Past due" && (
+          <p className="mt-7 rounded-2xl bg-[#fff0eb] p-5 text-sm font-bold">
+            Payment is past due. Update your payment method to keep access.
+          </p>
+        )}
         <section className="mt-10 grid gap-5 rounded-[2rem] bg-[#efe7ff] p-7 sm:grid-cols-3 sm:p-9">
           <div>
             <p className="text-[10px] font-bold tracking-wider text-black/40 uppercase">Current plan</p>

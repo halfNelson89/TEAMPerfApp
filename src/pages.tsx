@@ -1270,6 +1270,9 @@ function PortalHeader({
             <a href="/portal/admin" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">
               Admin
             </a>
+            <a href="/staff" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">
+              Staff
+            </a>
           </div>
           <button
             onClick={goHome}
@@ -1326,6 +1329,9 @@ function PortalHeader({
         ))}
         <a href="/portal/admin" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">
           Admin
+        </a>
+        <a href="/staff" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">
+          Staff
         </a>
       </div>
     </header>

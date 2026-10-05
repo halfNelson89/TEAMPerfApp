@@ -58,6 +58,26 @@ export function SignInPage() {
             <a href="/join/U14GIRLS" className="underline underline-offset-4">Have a team code? Join your team</a>
           </div>
         </form>
+        <div className="mt-5">
+          <p className="mb-2 text-[10px] font-bold tracking-wider text-black/40 uppercase">Demo state</p>
+          <div className="flex flex-wrap rounded-2xl bg-black/5 p-1">
+            {[
+              ["Default", "default"],
+              ["Wrong password", "error"],
+              ["Reset sent", "reset"],
+            ].map(([label, value]) => (
+              <button
+                key={value}
+                onClick={() => setState(value as "default" | "error" | "reset")}
+                className={`rounded-full px-4 py-2 text-xs font-bold ${
+                  state === value ? "bg-white shadow-sm" : "text-black/50"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
     </AuthShell>
   );
@@ -66,26 +86,29 @@ export function SignInPage() {
 function JoinState({ title, copy, action }: { title: string; copy?: string; action?: ReactNode }) {
   return (
     <AuthShell title="Join your team">
-      <div className="mx-auto max-w-xl px-5 py-20 text-center sm:px-9">
-        <h1 className="font-display text-5xl tracking-[-0.04em]">{title}</h1>
-        {copy && <p className="mt-5 text-base leading-7 text-black/55">{copy}</p>}
-        {action && <div className="mt-8">{action}</div>}
+      <div className="mx-auto max-w-xl px-5 py-10 sm:px-9 lg:py-16">
+        <section className="rounded-[2rem] bg-white p-7 text-center sm:p-9">
+          <p className="eyebrow">Join your team</p>
+          <h1 className="font-display mt-5 text-4xl tracking-[-0.04em]">{title}</h1>
+          {copy && <p className="mt-5 text-base leading-7 text-black/55">{copy}</p>}
+          {action && <div className="mt-8">{action}</div>}
+        </section>
       </div>
     </AuthShell>
   );
 }
 
 export function JoinPage({ code }: { code: string }) {
-  const state = new URLSearchParams(window.location.search).get("state");
   const [step, setStep] = useState(1);
   const [role, setRole] = useState<"parent" | "coach" | null>(null);
   const [termsError, setTermsError] = useState(false);
   const team = demoData.join;
+  const normalizedCode = code.toUpperCase();
 
-  if (state === "expired") {
+  if (normalizedCode === "EXPIRED") {
     return <JoinState title="This join link has expired." copy="Ask your coach or administrator for a new one." />;
   }
-  if (state === "member") {
+  if (normalizedCode === "MEMBER") {
     return (
       <JoinState
         title="You are already on this team."
@@ -93,8 +116,14 @@ export function JoinPage({ code }: { code: string }) {
       />
     );
   }
-  if (code.toUpperCase() !== team.code) {
-    return <JoinState title="Code not found" />;
+  if (normalizedCode !== team.code) {
+    return (
+      <JoinState
+        title="We could not find that team code."
+        copy="Check the code with your coach or administrator, or scan the QR code again."
+        action={<a href="/" className="inline-block min-h-14 rounded-full bg-[#171b19] px-8 py-4 text-base font-bold text-white">Back to home</a>}
+      />
+    );
   }
 
   const createAccount = (event: FormEvent<HTMLFormElement>) => {
