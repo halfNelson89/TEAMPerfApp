@@ -57,6 +57,7 @@ function AdminHeader({ screen }: { screen: AdminScreen }) {
           </a>
           <a href="/portal/athlete" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">Athlete</a>
           <span className="rounded-full bg-white px-4 py-2 text-xs font-bold shadow-sm">Admin</span>
+          <a href="/portal/professional" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">Professional</a>
           <a href="/staff" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">Staff</a>
         </div>
         <a href="/" className="hidden rounded-full border border-black/15 px-4 py-2.5 text-xs font-bold sm:block">
@@ -89,6 +90,7 @@ function AdminHeader({ screen }: { screen: AdminScreen }) {
           <a href="/portal?role=coach" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">Coach</a>
           <a href="/portal/athlete" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">Athlete</a>
           <span className="rounded-full bg-white px-4 py-2 text-xs font-bold shadow-sm">Admin</span>
+          <a href="/portal/professional" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">Professional</a>
           <a href="/staff" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">Staff</a>
         </div>
       </div>
@@ -504,13 +506,145 @@ function SettingsScreen() {
             <h2 className="mt-5 text-xl font-bold">{admin.plan}</h2>
             <p className="font-display mt-5 text-3xl">{productConfig.prices.education}</p>
           </section>
-          <section className="rounded-[2rem] bg-white p-7 sm:p-9 lg:col-span-2">
-            <label className="text-sm font-bold">Wellbeing contact<input defaultValue={admin.wellbeingContact} className={inputClass} /></label>
-            <p className="mt-3 text-xs text-black/45">Used by the Complete tier. Not active on the Education plan.</p>
-          </section>
+          <MentalHealthProfessionalSettings />
         </div>
       </div>
     </AdminPage>
+  );
+}
+
+function MentalHealthProfessionalSettings() {
+  const professional = demoData.professional;
+  const [selected, setSelected] = useState<"request" | "own" | "none" | null>(null);
+  const [demoState, setDemoState] = useState<"None yet" | "Requested" | "Added (own)" | "Matched (TEAM Institute)">(
+    "Matched (TEAM Institute)",
+  );
+  const submitRequest = (event: FormEvent) => {
+    event.preventDefault();
+    setDemoState("Requested");
+    setSelected(null);
+  };
+  const saveOwn = (event: FormEvent) => {
+    event.preventDefault();
+    setDemoState("Added (own)");
+    setSelected(null);
+  };
+  return (
+    <section className="rounded-[2rem] bg-white p-7 sm:p-9 lg:col-span-2">
+      <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
+        <div>
+          <h2 className="text-xl font-bold">Mental health professional</h2>
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-black/50">
+            The person who receives &apos;talk to someone&apos; requests from your athletes, parents, and coaches.
+          </p>
+        </div>
+        <div className="rounded-2xl bg-[#f4f2eb] px-5 py-4">
+          <p className="text-[10px] font-bold tracking-wider text-black/40 uppercase">Requests this season</p>
+          <p className="font-display mt-2 text-3xl">{professional.requestsThisSeason}</p>
+        </div>
+      </div>
+
+      <div className="mt-8 grid gap-4 lg:grid-cols-3">
+        {[
+          ["request", "Request one from TEAM Institute", "We will match your organization with a licensed psychologist."],
+          ["own", "Add your own", "Use a licensed professional your organization already works with."],
+          ["none", "None yet", "Requests go to your wellbeing contact below."],
+        ].map(([value, title, copy]) => (
+          <button
+            key={value}
+            onClick={() => {
+              setSelected(value as "request" | "own" | "none");
+              if (value === "none") setDemoState("None yet");
+            }}
+            className={`min-h-36 rounded-3xl border-2 p-6 text-left ${
+              selected === value ? "border-[#17201d] bg-[#f4f2eb]" : "border-black/10"
+            }`}
+          >
+            <span className="text-lg font-bold">{title}</span>
+            <span className="mt-3 block text-sm leading-6 text-black/50">{copy}</span>
+          </button>
+        ))}
+      </div>
+
+      {selected === "request" && (
+        <form onSubmit={submitRequest} className="mt-5 rounded-3xl bg-[#f4f2eb] p-6 sm:p-8">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <label className="text-sm font-bold">Organization size<input className={inputClass} /></label>
+            <label className="text-sm font-bold">Sports<input className={inputClass} /></label>
+            <label className="text-sm font-bold">Preferred start date<input type="date" className={inputClass} /></label>
+          </div>
+          <label className="mt-5 block text-sm font-bold">Notes<textarea className={`${inputClass} min-h-28 py-3`} /></label>
+          <button className="mt-6 rounded-full bg-[#171b19] px-6 py-3 text-sm font-bold text-white">Submit request</button>
+        </form>
+      )}
+
+      {selected === "own" && (
+        <form onSubmit={saveOwn} className="mt-5 rounded-3xl bg-[#f4f2eb] p-6 sm:p-8">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <label className="text-sm font-bold">Full name<input className={inputClass} /></label>
+            <label className="text-sm font-bold">Credentials<input className={inputClass} /></label>
+            <label className="text-sm font-bold">License state and number<input className={inputClass} /></label>
+            <label className="text-sm font-bold">Email<input type="email" className={inputClass} /></label>
+            <label className="text-sm font-bold">Phone<input type="tel" className={inputClass} /></label>
+            <label className="text-sm font-bold">Days they are available<input className={inputClass} /></label>
+          </div>
+          <button className="mt-6 rounded-full bg-[#171b19] px-6 py-3 text-sm font-bold text-white">Save professional</button>
+        </form>
+      )}
+
+      {(selected === "none" || demoState === "None yet") && (
+        <div className="mt-5 grid gap-5 rounded-3xl bg-[#f4f2eb] p-6 sm:grid-cols-2 sm:p-8">
+          <label className="text-sm font-bold">Wellbeing contact name<input defaultValue={professional.wellbeingContact.name} className={inputClass} /></label>
+          <label className="text-sm font-bold">Wellbeing contact email<input defaultValue={professional.wellbeingContact.email} className={inputClass} /></label>
+        </div>
+      )}
+
+      <div className="mt-8">
+        <p className="mb-2 text-[10px] font-bold tracking-wider text-black/40 uppercase">Demo state</p>
+        <div className="flex flex-wrap gap-1 rounded-2xl bg-black/5 p-1">
+          {(["None yet", "Requested", "Added (own)", "Matched (TEAM Institute)"] as const).map((state) => (
+            <button
+              key={state}
+              onClick={() => {
+                setDemoState(state);
+                setSelected(state === "None yet" ? "none" : null);
+              }}
+              className={`rounded-full px-4 py-2 text-xs font-bold ${
+                demoState === state ? "bg-white shadow-sm" : "text-black/50"
+              }`}
+            >
+              {state}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {demoState === "Requested" && (
+        <div className="mt-5 rounded-2xl bg-[#eef4d4] p-6">
+          <p className="font-bold">Request received. We will contact you within two business days.</p>
+          <p className="mt-3 text-sm text-black/55">Requested, pending match</p>
+        </div>
+      )}
+      {demoState === "Added (own)" && (
+        <div className="mt-5 rounded-2xl bg-[#eef4d4] p-6">
+          <p className="text-lg font-bold">{professional.ownSample.name}, {professional.ownSample.credentials}</p>
+          <p className="mt-2 text-sm text-black/55">{professional.ownSample.license}</p>
+          <p className="mt-4 text-xs font-bold uppercase">Added, pending verification</p>
+        </div>
+      )}
+      {demoState === "Matched (TEAM Institute)" && (
+        <div className="mt-5 rounded-2xl bg-[#eef4d4] p-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div><p className="text-lg font-bold">{professional.sample.name}</p><p className="mt-1 text-sm text-black/55">{professional.sample.title}</p></div>
+            <span className="rounded-full bg-white px-3 py-2 text-[10px] font-bold uppercase">{professional.sample.label}</span>
+          </div>
+        </div>
+      )}
+
+      <p className="mt-7 border-t border-black/10 pt-6 text-xs leading-5 text-black/50">
+        A contact request is not an emergency service. Crisis resources are always shown to the person making a request.
+      </p>
+    </section>
   );
 }
 

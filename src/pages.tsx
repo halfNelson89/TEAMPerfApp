@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { productConfig } from "./config";
 import { demoData } from "./demoData";
+import { TalkRequestFlow } from "./talkRequestFlow";
 
 type Role = "parent" | "coach";
 type View = "home" | "portal";
@@ -769,7 +770,8 @@ function LearnHub({ role }: { role: Role }) {
   );
 }
 
-function SupportHub({ openCrisis }: { openCrisis: () => void }) {
+function SupportHub({ openCrisis, role }: { openCrisis: () => void; role: Role }) {
+  const [talkOpen, setTalkOpen] = useState(false);
   return (
     <div className="mx-auto max-w-[1120px] px-5 py-10 sm:px-9 lg:py-14">
       <p className="eyebrow">Support & safeguarding</p>
@@ -821,6 +823,25 @@ function SupportHub({ openCrisis }: { openCrisis: () => void }) {
           </div>
         </div>
       </section>
+      <section className="mt-5 rounded-[2rem] bg-white p-7 sm:p-9">
+        <h2 className="font-display text-4xl">Talk to someone</h2>
+        <button
+          onClick={() => setTalkOpen(true)}
+          className="mt-7 rounded-full bg-[#171b19] px-6 py-3.5 text-sm font-bold text-white"
+        >
+          Talk to someone
+        </button>
+      </section>
+      {talkOpen && (
+        <TalkRequestFlow
+          audience={role}
+          close={() => setTalkOpen(false)}
+          openCrisis={() => {
+            setTalkOpen(false);
+            openCrisis();
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -1003,7 +1024,7 @@ function Portal({
       ) : page === "learn" ? (
         <LearnHub role={role} />
       ) : page === "support" ? (
-        <SupportHub openCrisis={() => setCrisisOpen(true)} />
+        <SupportHub openCrisis={() => setCrisisOpen(true)} role={role} />
       ) : role === "coach" ? (
         <CoachHome openLearn={() => setPage("learn")} />
       ) : (
@@ -1273,6 +1294,9 @@ function PortalHeader({
             <a href="/portal/admin" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">
               Admin
             </a>
+            <a href="/portal/professional" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">
+              Professional
+            </a>
             <a href="/staff" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">
               Staff
             </a>
@@ -1335,6 +1359,9 @@ function PortalHeader({
         </a>
         <a href="/portal/admin" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">
           Admin
+        </a>
+        <a href="/portal/professional" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">
+          Professional
         </a>
         <a href="/staff" className="rounded-full px-4 py-2 text-xs font-bold text-black/50">
           Staff

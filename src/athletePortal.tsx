@@ -1,7 +1,8 @@
 import { useState, type ReactNode } from "react";
 import { productConfig } from "./config";
 import { demoData } from "./demoData";
-import { Brand, DemoBanner } from "./pages";
+import { Brand, CrisisPanel, DemoBanner } from "./pages";
+import { TalkRequestFlow } from "./talkRequestFlow";
 
 type AthleteScreen = "home" | "skills" | "skill" | "check-in" | "progress" | "help" | "privacy";
 
@@ -52,6 +53,7 @@ function AthleteHeader({ screen }: { screen: AthleteScreen }) {
         <a href="/portal?role=coach" className="shrink-0 rounded-full px-3 py-2 text-xs font-bold text-black/45">Coach</a>
         <span className="shrink-0 rounded-full bg-white px-3 py-2 text-xs font-bold shadow-sm">Athlete</span>
         <a href="/portal/admin" className="shrink-0 rounded-full px-3 py-2 text-xs font-bold text-black/45">Admin</a>
+        <a href="/portal/professional" className="shrink-0 rounded-full px-3 py-2 text-xs font-bold text-black/45">Professional</a>
         <a href="/staff" className="shrink-0 rounded-full px-3 py-2 text-xs font-bold text-black/45">Staff</a>
       </div>
     </header>
@@ -279,7 +281,9 @@ function AthleteProgress() {
 }
 
 function AthleteHelp() {
-  const contact = demoData.athletePreview.wellbeingContact;
+  const professional = demoData.professional.sample;
+  const [talkOpen, setTalkOpen] = useState(false);
+  const [crisisOpen, setCrisisOpen] = useState(false);
   return (
     <AthletePage screen="help" title="Need to talk?">
       <div className="mx-auto max-w-2xl px-4 py-8 sm:px-8 lg:py-12">
@@ -295,17 +299,27 @@ function AthleteHelp() {
               <p className="mt-2 text-base text-black/60">{copy}</p>
             </div>
           ))}
-          <div className="rounded-[2rem] bg-[#d9ff54] p-6">
+          <button onClick={() => setTalkOpen(true)} className="rounded-[2rem] bg-[#d9ff54] p-6 text-left">
             <div className="flex items-center justify-between gap-3">
-              <h2 className="text-lg font-bold">Talk to an adult at your club or school</h2>
-              <span className="shrink-0 rounded-full bg-white/70 px-3 py-2 text-[10px] font-bold uppercase">Sample contact</span>
+              <h2 className="text-lg font-bold">Ask to talk with {professional.name}</h2>
+              <span className="shrink-0 rounded-full bg-white/70 px-3 py-2 text-[10px] font-bold uppercase">{professional.label}</span>
             </div>
-            <p className="mt-4 font-bold">{contact.name}</p>
-            <p className="mt-1 text-sm text-black/55">{contact.role}</p>
-          </div>
+            <p className="mt-4 text-sm text-black/55">{professional.title}</p>
+          </button>
         </div>
         <p className="mt-7 text-xs text-black/45">This app is for learning skills. It is not an emergency service.</p>
       </div>
+      {talkOpen && (
+        <TalkRequestFlow
+          audience="athlete"
+          close={() => setTalkOpen(false)}
+          openCrisis={() => {
+            setTalkOpen(false);
+            setCrisisOpen(true);
+          }}
+        />
+      )}
+      {crisisOpen && <CrisisPanel close={() => setCrisisOpen(false)} />}
     </AthletePage>
   );
 }

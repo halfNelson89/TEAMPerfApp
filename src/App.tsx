@@ -14,6 +14,10 @@ import {
 } from "./authPages";
 import { StaffEmailsPage, StaffPage } from "./staffPages";
 import { AthletePortal } from "./athletePortal";
+import {
+  ProfessionalRequestsPage,
+  ProfessionalSettingsPage,
+} from "./professionalPortal";
 
 export default function App() {
   const path = window.location.pathname.replace(/\/+$/, "") || "/";
@@ -22,6 +26,12 @@ export default function App() {
   }
   if (path.startsWith("/portal/athlete")) {
     return <AthletePortal path={path} />;
+  }
+  if (path === "/portal/professional/settings") {
+    return <ProfessionalSettingsPage />;
+  }
+  if (path === "/portal/professional") {
+    return <ProfessionalRequestsPage />;
   }
   if (path === "/portal/account") {
     return <AccountPage />;

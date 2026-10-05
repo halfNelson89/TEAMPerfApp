@@ -239,6 +239,8 @@ export function AccountPage() {
       ? "/portal/admin"
       : sourceRole === "athlete"
         ? "/portal/athlete"
+      : sourceRole === "professional"
+        ? "/portal/professional"
       : sourceRole === "coach"
         ? "/portal?role=coach"
         : "/portal";

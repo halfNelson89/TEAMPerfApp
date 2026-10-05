@@ -16,6 +16,7 @@ function StaffHeader({ page }: { page: "overview" | "emails" }) {
           <a href="/portal?role=coach" className="rounded-full px-3 py-2 text-xs font-bold text-black/45">Coach</a>
           <a href="/portal/athlete" className="rounded-full px-3 py-2 text-xs font-bold text-black/45">Athlete</a>
           <a href="/portal/admin" className="rounded-full px-3 py-2 text-xs font-bold text-black/45">Admin</a>
+          <a href="/portal/professional" className="rounded-full px-3 py-2 text-xs font-bold text-black/45">Professional</a>
           <span className="rounded-full bg-white px-3 py-2 text-xs font-bold shadow-sm">Staff</span>
         </div>
         <a href="/" className="rounded-full border border-black/15 px-4 py-2.5 text-xs font-bold">Exit</a>
@@ -30,6 +31,7 @@ function StaffHeader({ page }: { page: "overview" | "emails" }) {
           <a href="/portal?role=coach" className="shrink-0 rounded-full px-3 py-2 text-xs font-bold text-black/45">Coach</a>
           <a href="/portal/athlete" className="shrink-0 rounded-full px-3 py-2 text-xs font-bold text-black/45">Athlete</a>
           <a href="/portal/admin" className="shrink-0 rounded-full px-3 py-2 text-xs font-bold text-black/45">Admin</a>
+          <a href="/portal/professional" className="shrink-0 rounded-full px-3 py-2 text-xs font-bold text-black/45">Professional</a>
           <span className="shrink-0 rounded-full bg-white px-3 py-2 text-xs font-bold shadow-sm">Staff</span>
         </div>
       </div>
@@ -68,7 +70,7 @@ export function StaffPage() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[940px] border-collapse text-left">
               <thead><tr className="border-b border-black/10 text-[10px] font-bold tracking-wider text-black/40 uppercase">
-                {["Name", "Type", "Plan", "Teams", "People", "Completion", "Season end date"].map((heading) => <th key={heading} className="px-6 py-4">{heading}</th>)}
+                {["Name", "Type", "Plan", "Teams", "People", "Completion", "Contact requests", "Season end date"].map((heading) => <th key={heading} className="px-6 py-4">{heading}</th>)}
               </tr></thead>
               <tbody>{staff.organizations.map((organization) => (
                 <tr key={organization.name} className="border-b border-black/5 last:border-0">
@@ -78,6 +80,7 @@ export function StaffPage() {
                   <td className="px-6 py-4 text-sm">{organization.teams}</td>
                   <td className="px-6 py-4 text-sm">{organization.people}</td>
                   <td className="px-6 py-4 text-sm font-bold">{organization.completion}%</td>
+                  <td className="px-6 py-4 text-sm font-bold">{organization.contactRequests}</td>
                   <td className="px-6 py-4 text-sm text-black/55">{organization.seasonEnd}</td>
                 </tr>
               ))}</tbody>
