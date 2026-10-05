@@ -1,6 +1,25 @@
-import { RouterProvider } from "react-router/dom";
-import { router } from "./routes";
+import { CoursesPage, MainApp } from "./pages";
+import {
+  AboutPage,
+  OrganizationsPage,
+  PricingPage,
+  VerifyPage,
+} from "./publicPages";
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  switch (window.location.pathname.replace(/\/+$/, "") || "/") {
+    case "/courses":
+    case "/Learn":
+      return <CoursesPage />;
+    case "/organizations":
+      return <OrganizationsPage />;
+    case "/pricing":
+      return <PricingPage />;
+    case "/about":
+      return <AboutPage />;
+    case "/verify":
+      return <VerifyPage />;
+    default:
+      return <MainApp />;
+  }
 }

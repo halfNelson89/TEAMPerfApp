@@ -82,7 +82,7 @@ const Icon = ({
   );
 };
 
-function Brand({ light = false }: { light?: boolean }) {
+export function Brand({ light = false }: { light?: boolean }) {
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -107,7 +107,7 @@ function DemoBanner() {
   );
 }
 
-function CrisisPanel({ close }: { close: () => void }) {
+export function CrisisPanel({ close }: { close: () => void }) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-5"
@@ -167,31 +167,21 @@ function Home({
       <header className="absolute inset-x-0 top-0 z-30">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 sm:px-9 lg:px-14">
           <Brand light />
-          <nav className="hidden items-center gap-8 text-sm font-medium text-white/85 md:flex">
-            <button onClick={() => scrollTo("method")} className="transition hover:text-white">
-              Our approach
-            </button>
-            <button onClick={() => scrollTo("pathways")} className="transition hover:text-white">
-              Learning pathways
-            </button>
-            <button onClick={() => scrollTo("mission")} className="transition hover:text-white">
-              Our mission
-            </button>
-            <button
-              onClick={() => (window.location.href = "/courses")}
-              className="transition hover:text-white"
-            >
-              Learn
-            </button>
+          <nav className="hidden items-center gap-6 text-sm font-medium text-white/85 xl:flex">
+            {productConfig.publicNavigation.map((item) => (
+              <a key={item.href} href={item.href} className="transition hover:text-white">
+                {item.label}
+              </a>
+            ))}
           </nav>
           <button
             onClick={() => openPortal("parent")}
-            className="hidden rounded-full bg-[#d9ff54] px-5 py-3 text-sm font-bold text-[#171b19] transition hover:scale-[1.03] md:block"
+            className="hidden rounded-full bg-[#d9ff54] px-5 py-3 text-sm font-bold text-[#171b19] transition hover:scale-[1.03] xl:block"
           >
             Enter portal
           </button>
           <button
-            className="text-white md:hidden"
+            className="text-white xl:hidden"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle navigation"
           >
@@ -199,27 +189,17 @@ function Home({
           </button>
         </div>
         {menuOpen && (
-          <div className="mx-5 rounded-2xl bg-[#171b19] p-5 text-white shadow-2xl md:hidden">
+          <div className="mx-5 rounded-2xl bg-[#171b19] p-5 text-white shadow-2xl xl:hidden">
             <div className="grid gap-1">
-              {[
-                ["Our approach", "method"],
-                ["Learning pathways", "pathways"],
-                ["Our mission", "mission"],
-              ].map(([label, id]) => (
-                <button
-                  key={id}
-                  onClick={() => scrollTo(id)}
+              {productConfig.publicNavigation.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
                   className="rounded-xl px-3 py-3 text-left font-medium hover:bg-white/10"
                 >
-                  {label}
-                </button>
+                  {item.label}
+                </a>
               ))}
-              <button
-                onClick={() => (window.location.href = "/courses")}
-                className="rounded-xl px-3 py-3 text-left font-medium hover:bg-white/10"
-              >
-                Learn
-              </button>
               <button
                 onClick={() => openPortal("parent")}
                 className="mt-3 rounded-full bg-[#d9ff54] px-5 py-3 font-bold text-[#171b19]"
@@ -267,6 +247,12 @@ function Home({
               >
                 Why this matters
               </button>
+              <a
+                href="/organizations"
+                className="rounded-full border border-white/40 px-7 py-4 text-center text-sm font-bold text-white backdrop-blur-sm transition hover:bg-white hover:text-[#171b19]"
+              >
+                For schools and clubs
+              </a>
             </div>
           </div>
           <div className="absolute right-9 bottom-9 hidden items-center gap-3 text-xs text-white/70 lg:flex">
@@ -394,19 +380,21 @@ function Home({
             {productConfig.name} was created by Dr. Corrine Fallon, Licensed
             Psychologist, Pennsylvania license PS018778.
           </p>
+          <a href="/about" className="mt-5 inline-block text-sm font-bold underline underline-offset-4">
+            About Dr. Fallon
+          </a>
         </div>
       </section>
 
       <footer className="bg-[#171b19] px-5 py-10 text-white sm:px-9 lg:px-14">
         <div className="mx-auto flex max-w-[1328px] flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
           <Brand light />
-          <p className="text-xs text-white/45">
-            Built for the people behind the performance.
-          </p>
-          <div className="flex gap-5 text-xs font-medium text-white/65">
-            <button onClick={() => openPortal("parent")}>Parent portal</button>
-            <button onClick={() => openPortal("coach")}>Coach portal</button>
-          </div>
+          <nav className="flex flex-wrap gap-x-5 gap-y-3 text-xs font-medium text-white/65">
+            {productConfig.publicNavigation.map((item) => (
+              <a key={item.href} href={item.href}>{item.label}</a>
+            ))}
+            <a href="/verify">Verify a certificate</a>
+          </nav>
         </div>
       </footer>
     </main>
@@ -1386,16 +1374,17 @@ export function CoursesPage() {
           <div onClick={() => (window.location.href = "/")}>
             <Brand />
           </div>
-          <nav className="hidden items-center gap-7 text-sm font-medium md:flex">
-            <a href="/">Portal</a>
-            <a href="/#method">Our approach</a>
-            <a
-              href="/courses"
-              aria-current="page"
-              className="rounded-full bg-[#17201d] px-5 py-2.5 font-bold text-white"
-            >
-              Learn
-            </a>
+          <nav className="hidden items-center gap-6 text-sm font-medium xl:flex">
+            {productConfig.publicNavigation.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                aria-current={item.href === "/courses" ? "page" : undefined}
+                className={item.href === "/courses" ? "font-bold" : ""}
+              >
+                {item.label}
+              </a>
+            ))}
           </nav>
           <a
             href="/"
@@ -1403,6 +1392,21 @@ export function CoursesPage() {
           >
             Enter portal
           </a>
+          <details className="relative xl:hidden">
+            <summary className="cursor-pointer list-none rounded-full border border-black/15 px-4 py-2.5 text-sm font-bold">
+              Menu
+            </summary>
+            <nav className="absolute right-0 top-14 z-40 grid w-64 gap-1 rounded-2xl bg-[#17201d] p-4 text-sm font-medium text-white shadow-2xl">
+              {productConfig.publicNavigation.map((item) => (
+                <a key={item.href} href={item.href} className="rounded-xl px-3 py-3 hover:bg-white/10">
+                  {item.label}
+                </a>
+              ))}
+              <a href="/" className="mt-2 rounded-full bg-[#d9ff54] px-4 py-3 text-center font-bold text-[#171b19]">
+                Enter portal
+              </a>
+            </nav>
+          </details>
         </div>
       </header>
 
@@ -1423,13 +1427,12 @@ export function CoursesPage() {
       <footer className="bg-[#171b19] px-5 py-10 text-white sm:px-9 lg:px-14">
         <div className="mx-auto flex max-w-[1328px] flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
           <Brand light />
-          <p className="text-xs text-white/45">
-            Built for the people behind the performance.
-          </p>
-          <div className="flex gap-5 text-xs font-medium text-white/65">
-            <a href="/">Parent portal</a>
-            <a href="/">Coach portal</a>
-          </div>
+          <nav className="flex flex-wrap gap-x-5 gap-y-3 text-xs font-medium text-white/65">
+            {productConfig.publicNavigation.map((item) => (
+              <a key={item.href} href={item.href}>{item.label}</a>
+            ))}
+            <a href="/verify">Verify a certificate</a>
+          </nav>
         </div>
       </footer>
     </div>

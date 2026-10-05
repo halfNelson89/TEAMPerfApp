@@ -6,4 +6,16 @@
   <url>
     <loc>/courses</loc>
   </url>
+  <url>
+    <loc>/organizations</loc>
+  </url>
+  <url>
+    <loc>/pricing</loc>
+  </url>
+  <url>
+    <loc>/about</loc>
+  </url>
+  <url>
+    <loc>/verify</loc>
+  </url>
 </urlset>

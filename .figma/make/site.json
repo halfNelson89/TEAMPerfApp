@@ -9,10 +9,18 @@
   },
   "sitemap": [
     "/Learn",
-    "/courses"
+    "/courses",
+    "/organizations",
+    "/pricing",
+    "/about",
+    "/verify"
   ],
   "prerender": [
     "/Learn",
-    "/courses"
+    "/courses",
+    "/organizations",
+    "/pricing",
+    "/about",
+    "/verify"
   ]
 }

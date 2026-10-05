@@ -80,4 +80,12 @@ export const demoData = {
       ["Connection", 85],
     ],
   },
+  certificates: [
+    {
+      id: "TEAM-DEMO-2026",
+      name: "Jordan Davis",
+      course: "Coaching the Whole Athlete: a course for coaches",
+      completed: "September 4, 2026",
+    },
+  ],
 } as const;
